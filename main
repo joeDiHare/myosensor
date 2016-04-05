@@ -1,0 +1,24 @@
+import pyb
+led3 = pyb.LED(3)
+led3.on()
+adc = pyb.ADC(pyb.Pin.board.X19)    # create an ADC on pin X19
+buf = bytearray(100)                # create a buffer of 100 bytes
+buf2 = bytearray(100)               # create a buffer of 100 bytes
+sw = pyb.Switch()                   # USR button
+accel = pyb.Accel()                 # accellerometer
+f = open("log/myodata.dat", "a")    # open the file for writing
+while True:
+    adc.read_timed(buf, 100)        # read analog values into buffer at 1000Hz (will take 1 s)
+    x, y, z = accel.filtered_xyz()  # get the accelerometer data
+    time = pyb.millis()             # get time in ms
+    for val in buf:
+        f.write("{} {:d} {} {}\n".format(time, val, x, y, z)) # write muscl_input and x,y,z
+        #f.write("{} {} {} {}\n".format(time, val, x, y, z)) # write muscl_input and x,y,z
+        #lines.append('{} {} {} {}\n'.format(a, x, y, z)) FASTER, BUT then lines gets quite big...
+    pyb.delay(1)                    # apparently, for stability
+    #for val in buf:                # REPL: loop and print values
+    #    print(val)
+    if sw():                        # if USR button is pressed, exit loop
+        break
+f.close()                           # close the file
+led3.off()                          # turn led off
