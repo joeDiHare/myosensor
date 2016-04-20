@@ -20,12 +20,14 @@
 
 %% analise data
 clear all; clc;
-load myodata.dat
+name = 'myodata-1461170687003.dat';
+load(name)
+eval(['myodata = ',strrep(name(1:end-4),'-','_')]);
 t=myodata(:,1);
-m=myodata(:,2);
-x=myodata(:,3);
-y=myodata(:,4);
-z=myodata(:,5);
+x=myodata(:,2);
+y=myodata(:,3);
+z=myodata(:,4);
+m=myodata(:,5:end); m=m'; m=m(:)';
 
 figure(10)
 %display
